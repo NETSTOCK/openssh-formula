@@ -8,6 +8,8 @@
 {#-   Get IPv4 and IPv6 addresses from the DNS #}
 {%-   set ip4 = salt['dig.A'](host) -%}
 {%-   set ip6 = salt['dig.AAAA'](host) -%}
+{%-   set ip4host = salt['dig.A'](host_names.get(host)) -%}
+{%-   set ip6host = salt['dig.AAAA'](host_names.get(host)) -%}
 
 {#-   The host names to use are to be found within the dict 'host_names'. #}
 {#-   If there are none, the host is used directly. #}
@@ -32,7 +34,7 @@
 {%-   endif -%}
 
 {#-   Append IP addresses and aliases (if they are not already present) #}
-{%-   for ip in (ip4 + ip6)|sort -%}
+{%-   for ip in (ip4 + ip6 + ip4host + ip6host)|sort -%}
 {%-     do names.append(ip) -%}
 {%-     for alias in aliases_ips.get(ip, []) -%}
 {%-       if alias not in names -%}
